@@ -1,9 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 
 const EditUser = ({ userToEdit, showModel, onUpdate, onCancel }) => {
 
+    console.log("Edit Mangement Re rendered.......");
     const [user, setUser] = useState(userToEdit)
+
+
+    useEffect(()=>{
+
+        console.log("Edit User User Effect Demo")
+        return () =>{
+            console.log("Clean up function")
+        }
+
+    },[])
 
     const handleInputChange = (e, field) => {
         setUser((prevState) => ({ ...prevState, [field]: e.target.value }))
@@ -14,7 +25,7 @@ const EditUser = ({ userToEdit, showModel, onUpdate, onCancel }) => {
     }
 
     return (
-        <div className="text-end" style={{ marginBottom: "10px" }}>
+        <div className="text-end editComponent" style={{ marginBottom: "10px" }}>
             <Modal show={showModel} onHide={onCancel}
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"

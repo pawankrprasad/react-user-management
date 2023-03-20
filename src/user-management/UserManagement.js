@@ -5,6 +5,8 @@ import UserList from "./UserList";
 
 const UserManagement = () =>{
 
+    console.log("User Mangement Re rendered.......");
+
     const [users, setUsers] = useState([]);
 
     const [editUser, setEditUser] = useState(false);
