@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Modal, Form, Alert } from "react-bootstrap";
 
 const AddUser = ({ onSave }) => {
@@ -96,4 +96,4 @@ const AddUser = ({ onSave }) => {
     )
 }
 
-export default AddUser;
+export default React.memo(AddUser);
