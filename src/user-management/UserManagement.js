@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import axios from 'axios';
 
 import AddUser from "./AddUser";
 import EditUser from "./EditUser";
 import UserList from "./UserList";
+
+import HTTP from "../API";
 
 const UserManagement = () =>{
 
@@ -18,8 +19,8 @@ const UserManagement = () =>{
 
 
     const getUsers = async()=>{
-      const response =  await axios.get('http://localhost:4000/users');
-      setUsers(response.data);
+      const data =  await HTTP.get('/users');
+      setUsers(data);
       setUserUpdated(false);
     }
 
@@ -29,11 +30,19 @@ const UserManagement = () =>{
 
     const onAddUser = async(user) =>{
 
-        const response =  await axios.post('http://localhost:4000/users', user);
+        try{
+            const data =  await HTTP.post('/users', user);
 
-        console.log(response);
+            console.log(data);
 
-        setUserUpdated(true)
+            user.id = data[0].insertId;
+
+            setUsers((prevState)=>([...prevState, {...user}]));
+        }catch(error){
+            console.log(error);
+        }
+
+        
         //setUsers(response.data);
 
         // let id = 100;
@@ -46,7 +55,7 @@ const UserManagement = () =>{
     }
 
     const onDelete = async(id) =>{
-        const response =  await axios.delete(`http://localhost:4000/users/${id}`);
+        await HTTP.delete(`/users/${id}`);
         setUserUpdated(true)
     }
 

@@ -6,9 +6,7 @@ const EditUser = ({ userToEdit, showModel, onUpdate, onCancel }) => {
     console.log("Edit Mangement Re rendered.......");
     const [user, setUser] = useState(userToEdit)
 
-
     useEffect(()=>{
-
         console.log("Edit User User Effect Demo")
         return () =>{
             console.log("Clean up function")
