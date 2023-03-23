@@ -7,8 +7,7 @@ axios.defaults.baseURL = 'http://localhost:4000';
 axios.interceptors.request.use(function (config) {
     // Do something before request is sent
     
-    config.headers['Authorization'] ="afsdkfjaskldfjlsadkfjlkda";
-
+    config.headers['Authorization'] = localStorage.getItem('token');
 
     console.log("Request Interceptor ", config);
     return config;

@@ -39,7 +39,7 @@ const UserManagement = () =>{
 
             setUsers((prevState)=>([...prevState, {...user}]));
         }catch(error){
-            console.log(error);
+            console.log(error.response.data);
         }
 
         
