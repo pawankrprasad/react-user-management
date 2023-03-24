@@ -8,6 +8,11 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(()=>{
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(token && true)
+  },[])
+
   return (
     <div style={{padding:"50px"}}>
       {isLoggedIn ? <UserManagement/> : <Login onLogin = {setIsLoggedIn}/>}  
