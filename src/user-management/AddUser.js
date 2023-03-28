@@ -1,83 +1,43 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useRef } from "react";
 import { Button, Modal, Form, Alert } from "react-bootstrap";
 
-
-const initialState = {
-    user: {
-        fname: "",
-        lname: "",
-        email: "",
-        phone: "",
-        status: false
-    },
-    showModel : false
-}
-
-const addUserReducer = (state, action) =>{
-    const {type, payload } = action;
-
-    console.log("Action in Reducer ", action);
-    switch(type){
-        case "OPEN_MODEL":
-            return {
-                ...state,
-                showModel : true
-            }
-        case "CLOSE_MODEL":
-            return {
-                ...state,
-                showModel : false
-            }
-        case "INPUT_CHANGE":
-            return {
-                ...state,
-                 user: { ...state.user,  [payload.field]: payload.value }   
-            }
-        case "CHECKBOX_CHANGE":
-            return {
-                ...state,
-                user: { ...state.user,  [payload.field]: !state.user[payload.field]} 
-
-            }
-        case "FORM_SUBMITTED":
-            return {
-                ...initialState
-            }
-        default:
-            return {
-                ...state
-            }
-    }
-}
+import { 
+    addUserReducer,
+    initialState,
+    modelOpen,
+    modelClose,
+    inputChange,
+    checkBoxChange,
+    formSubmit
+} from '../reducers/addUserReducer';
 
 
 const AddUser = ({ onSave }) => {
-
    
-    const[state, dispatch] = useReducer(addUserReducer, initialState)
+    const [state, dispatch]  = useReducer(addUserReducer, initialState);
 
-    //Handle Input Changes
-    const handleInputChange = (e, field) => {
-        dispatch({ type: "INPUT_CHANGE", payload: { field, value: e.target.value }});
-    }
+    const phoneInput = useRef();
 
-    //Handle Checkbox Changes
-    const handleCheckBoxChange = (e) => {
-        dispatch({ type: "CHECKBOX_CHANGE", payload: {field:'status'}});
-    }
 
     //Handle OnSubmit button
     const handleOnSubmit = () => {
-        onSave(state.user); //Send Data to parent component
-        dispatch({ type: "FORM_SUBMITTED"});
-        
+        onSave(state); //Send Data to parent component
+        dispatch(formSubmit())
     }
 
+    const handlePhoneInput = () =>{
+        phoneInput.current.value = "AFsdfsadfs";
+    }
+
+    const inputChangeHandler = (e, field) => dispatch(inputChange({field, value: e.target.value}))
 
     return (
         <div className="text-end addComponent" style={{ marginBottom: "10px" }}>
-            <Button onClick={() =>  dispatch({type:"OPEN_MODEL"})}>Add User</Button>
-            <Modal show={ state.showModel} onHide={() => dispatch({type:"CLOSE_MODEL"})}
+
+            
+
+            <Button onClick={() => dispatch(modelOpen())}>Add User</Button>
+            <Modal show={state.showModel} onHide={() => dispatch(modelClose())}
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
@@ -88,30 +48,31 @@ const AddUser = ({ onSave }) => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                    <Button onClick={handlePhoneInput}>Access PHone Number Input Box</Button>
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>First Name</Form.Label>
-                            <Form.Control type="text" value={state.user.fname} placeholder="Enter First Name" onChange={(e) => handleInputChange(e, 'fname')} autoFocus />
+                            <Form.Control type="text" value={state.fname} placeholder="Enter First Name" onChange={(e) =>inputChangeHandler(e, 'fname')} autoFocus />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicPassword">
                             <Form.Label>Last Name</Form.Label>
-                            <Form.Control type="text" value={state.user.lname} placeholder="Enter Last Name" onChange={(e) => handleInputChange(e, 'lname')} />
+                            <Form.Control type="text" value={state.lname} placeholder="Enter Last Name" onChange={(e) =>  dispatch(inputChange({field: 'lname', value: e.target.value}))} />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" value={state.user.email} placeholder="Enter Email" onChange={(e) => handleInputChange(e, 'email')} />
+                            <Form.Control type="email" value={state.email} placeholder="Enter Email" onChange={(e) =>  dispatch(inputChange({field: 'email', value: e.target.value}))} />
                         </Form.Group>
                         <Form.Group className="mb-3" >
                             <Form.Label>Phone</Form.Label>
-                            <Form.Control type="text" value={state.user.phone} placeholder="Enter Phone Number" onChange={(e) => handleInputChange(e, 'phone')} />
+                            <Form.Control ref={phoneInput} type="text" value={state.phone} placeholder="Enter Phone Number" onChange={(e) =>  dispatch(inputChange({field: 'phone', value: e.target.value}))} />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Check type="checkbox" checked={state.user.status} label="IsActive" onChange={handleCheckBoxChange} />
+                            <Form.Check type="checkbox" checked={state.status} label="IsActive" onChange={() =>  dispatch(checkBoxChange({field: 'status'}))} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="default" onClick={() => dispatch({type:"CLOSE_MODEL"})} >Close</Button>
+                    <Button variant="default" onClick={() => dispatch(modelClose())} >Close</Button>
                     <Button variant="primary" type="submit" onClick={handleOnSubmit}>
                         Create
                     </Button>
